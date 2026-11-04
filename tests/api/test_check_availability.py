@@ -42,6 +42,13 @@ class TestCheckAvailability:
 
         assert response.status_code == 200
 
+    def test_punycode_domain_is_accepted(self, domain_search_api):
+        # The storefront converts "קפה.com" to punycode before calling the API.
+        response = domain_search_api.check_availability("xn--8db5ai.com")
+
+        assert response.status_code == 200
+        assert response.json()["availability"]["domain"] == "xn--8db5ai.com"
+
     @pytest.mark.parametrize(
         "domain, expected_message",
         [
@@ -51,6 +58,7 @@ class TestCheckAvailability:
             pytest.param("my_bakery.com", "not a valid hostname", id="underscore"),
             pytest.param("-bakery.com", "not a valid hostname", id="leading_hyphen"),
             pytest.param("bakery-.com", "not a valid hostname", id="trailing_hyphen"),
+            # Raw unicode is rejected; callers must send punycode (see test below).
             pytest.param("קפה.com", "not a valid hostname", id="non_latin"),
             pytest.param("a" * 64 + ".com", "DOMAIN_TOO_LONG", id="64_character_name"),
         ],

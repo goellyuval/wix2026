@@ -8,6 +8,20 @@ pytestmark = pytest.mark.api
 class TestAuthentication:
     """Docs: 'This call requires an account level API key'. In practice the API answers anyway."""
 
+    @pytest.fixture
+    def make_api(self, settings):
+        """Class-local factory: only these tests need clients with broken credentials."""
+        clients = []
+
+        def _make(api_key=None, account_id=None) -> DomainSearchApi:
+            client = DomainSearchApi(settings.api_base_url, api_key, account_id)
+            clients.append(client)
+            return client
+
+        yield _make
+        for client in clients:
+            client.close()
+
     @pytest.mark.xfail(strict=True, reason="Auth is not enforced: request succeeds. See FINDINGS.md")
     @pytest.mark.parametrize(
         "use_key, use_account_id",
@@ -17,9 +31,8 @@ class TestAuthentication:
             pytest.param(True, False, id="no_account_id"),
         ],
     )
-    def test_missing_credentials_are_rejected(self, settings, taken_domain, use_key, use_account_id):
-        api = DomainSearchApi(
-            settings.api_base_url,
+    def test_missing_credentials_are_rejected(self, make_api, settings, taken_domain, use_key, use_account_id):
+        api = make_api(
             api_key=settings.api_key if use_key else None,
             account_id=settings.account_id if use_account_id else None,
         )
@@ -29,8 +42,8 @@ class TestAuthentication:
         assert response.status_code in (401, 403)
 
     @pytest.mark.xfail(strict=True, reason="Auth is not enforced: a fake key succeeds. See FINDINGS.md")
-    def test_invalid_key_is_rejected(self, settings, taken_domain):
-        api = DomainSearchApi(settings.api_base_url, api_key="not-a-real-key", account_id=settings.account_id)
+    def test_invalid_key_is_rejected(self, make_api, settings, taken_domain):
+        api = make_api(api_key="not-a-real-key", account_id=settings.account_id)
 
         response = api.check_availability(taken_domain)
 

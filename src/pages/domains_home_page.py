@@ -17,13 +17,18 @@ class DomainsHomePage(BasePage):
         self.search_input = page.get_by_role("searchbox", name="Type the domain you want").first
         self.search_button = page.get_by_role("button", name="Search Domains").first
 
+    def open(self, query: str = ""):
+        super().open(query)
+        # Hydration race: on "load" the search box accepts text, but its click handler isn't
+        # attached yet, so "Search" silently does nothing (first search ignored 5/5 headless runs).
+        # Playwright usually discourages networkidle, but here it is the measured "ready" signal:
+        # after it, the first search worked 3/3 (~4.7 s). See FINDINGS.md.
+        self.page.wait_for_load_state("networkidle")
+        return self
+
     def search(self, domain: str) -> DomainResultsPage:
         log.info("Search for %s", domain)
-        # fill() right after load is racy: if the input isn't hydrated yet, the value is set
-        # but the search silently does nothing (observed ~1 in 2 runs). Typing key by key
-        # goes through the component's handlers and was stable.
-        self.search_input.click()
-        self.search_input.press_sequentially(domain, delay=30)
+        self.search_input.fill(domain)
         self.search_button.click()
         self.page.wait_for_url("**/domain/result/**")
         return DomainResultsPage(self.page)
