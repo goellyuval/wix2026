@@ -2,7 +2,7 @@ import pytest
 
 from src.api.domain_search_api import DomainSearchApi
 
-pytestmark = pytest.mark.api
+pytestmark = [pytest.mark.api, pytest.mark.regression]
 
 
 class TestAuthentication:

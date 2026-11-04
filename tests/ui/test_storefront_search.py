@@ -1,7 +1,7 @@
 import pytest
 from playwright.sync_api import expect
 
-pytestmark = pytest.mark.ui
+pytestmark = [pytest.mark.ui, pytest.mark.regression]
 
 
 class TestStorefrontSearch:
@@ -19,6 +19,7 @@ class TestStorefrontSearch:
         expect(results_page.available_card).to_contain_text(free_domain)
         expect(results_page.available_card).to_contain_text("Available now!")
 
+    @pytest.mark.sanity
     @pytest.mark.parametrize("domain_fixture", ["taken_domain", "free_domain"], ids=["taken", "free"])
     def test_storefront_matches_public_api(self, request, results_page, domain_search_api, domain_fixture):
         # Parametrize over fixture names so each case reuses the shared test-data fixtures.

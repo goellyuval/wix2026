@@ -2,17 +2,19 @@ import pytest
 
 from src.utils.domains import DOCUMENTED_PREMIUM_TYPES
 
-pytestmark = pytest.mark.api
+pytestmark = [pytest.mark.api, pytest.mark.regression]
 
 
 class TestCheckAvailability:
 
+    @pytest.mark.sanity
     def test_taken_domain_is_not_available(self, domain_search_api, taken_domain):
         response = domain_search_api.check_availability(taken_domain)
 
         assert response.status_code == 200
         assert response.json()["availability"]["available"] is False
 
+    @pytest.mark.sanity
     def test_free_domain_is_available(self, domain_search_api, free_domain):
         response = domain_search_api.check_availability(free_domain)
 
@@ -52,7 +54,7 @@ class TestCheckAvailability:
     @pytest.mark.parametrize(
         "domain, expected_message",
         [
-            pytest.param("mybakery", "INVALID_DOMAIN", id="missing_tld"),
+            pytest.param("mybakery", "INVALID_DOMAIN", id="missing_tld", marks=pytest.mark.sanity),
             pytest.param("mybakery.notatld", "INVALID_DOMAIN", id="unknown_tld"),
             pytest.param("", "domain must not be empty", id="empty"),
             pytest.param("my_bakery.com", "not a valid hostname", id="underscore"),

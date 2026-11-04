@@ -2,7 +2,7 @@ import pytest
 
 from src.utils.domains import is_full_domain
 
-pytestmark = pytest.mark.api
+pytestmark = [pytest.mark.api, pytest.mark.regression]
 
 QUERY = "sunny bakery"
 
@@ -10,6 +10,7 @@ QUERY = "sunny bakery"
 class TestSuggestDomains:
     """Suggestions are generated, so these tests check the contract, never the exact names."""
 
+    @pytest.mark.sanity
     def test_returns_at_most_the_requested_limit(self, domain_search_api):
         response = domain_search_api.suggest_domains(QUERY, limit=5)
 
