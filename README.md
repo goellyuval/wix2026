@@ -1,7 +1,8 @@
 # Wix Domains QA: "Can I get this name?"
 
-**Time spent: about 3 hours in total**, including environment setup (Git, Python, Wix account, API key) before the
-first commit.
+**Time spent: about 3 hours in total.** About 1.5 h before the first commit (installing Git and Python, Wix account
+and API key, probing the API, building the first structure, tests and test plan), and about 1.5 h from the first
+commit to the last.
 
 QA home assignment for Wix Domains: understanding, test plan, exploration and automation for the four doors that
 answer "Can I get this name?": the domain storefront, WHOIS lookup, Business Name Generator and the public
@@ -25,6 +26,7 @@ python -m venv .venv
 .venv\Scripts\python.exe -m playwright install chromium
 copy .env.example .env        # then fill in WIX_API_KEY and WIX_ACCOUNT_ID
 ```
+macOS / Linux: use `.venv/bin/python` instead of `.venv\Scripts\python.exe`, and `cp .env.example .env`.
 
 **Run everything (single command):**
 ```
