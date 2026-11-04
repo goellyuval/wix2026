@@ -149,8 +149,9 @@ activemq-data/
 # SageMath parsed files
 *.sage.py
 
-# Playwright artifacts (traces/screenshots on failure)
+# Playwright artifacts (traces/screenshots on failure) and triage reports
 test-results/
+reports/
 
 # Environments
 .env

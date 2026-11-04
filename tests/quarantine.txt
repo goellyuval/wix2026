@@ -1,0 +1,3 @@
+# Quarantined tests: they still run, but a failure is reported as xfail and doesn't break the suite.
+# One per line:  <pytest node id> | <reason> | <date added YYYY-MM-DD>
+# Added and released by the triage-suite skill (.claude/skills/triage-suite). Remove a line once the test is fixed.
