@@ -69,10 +69,10 @@ Status: ✅ passed · ❌ issue found · ⚠️ partial/risk · ⬜ not run · �
 | Taken name | "already registered" + alternatives | ✅ 🤖 |
 | Free name | "Exact Match · Available now!" + correct price | ✅ 🤖 |
 | No TLD (`sunnybaker`) | Suggestions only | ✅ |
-| TLD Wix doesn't sell | Clear message + supported TLDs link | ✅ |
+| TLD Wix doesn't sell | Clear message + supported TLDs link | ✅ 🤖 |
 | Spaces + mixed case | Trimmed and normalized everywhere | ⚠️ only in the availability call |
 | Hebrew name | Converted to punycode | ✅ |
-| 64-char name | Clear, correct limit message | ❌ says "fewer than 63", suggests 63-char names |
+| 64-char name | Clear, correct limit message | ❌ 🤖 says "fewer than 63", suggests 63-char names |
 | Search right after page load | Works | ❌ silently ignored until the page finishes loading |
 | Renewal price and conditions | Visible before cart | ⚠️ only in a hover tooltip |
 | Suggestions load time | Fast | ⚠️ 2–5 s (availability ~0.4 s) |
@@ -155,7 +155,7 @@ Known differences from the docs are `xfail(strict=True)` tests: they document th
 - Should `suggest-domains` accept a query that includes a TLD? The docs say no; the storefront sends one.
 
 ## 9. Next steps
-1. UI test for the 63-character limit message.
+1. ~~UI test for the 63-character limit message~~ (done: strict xfail).
 2. UI check that the card price equals the price service response.
 3. WHOIS smoke test (registered → record; unregistered → storefront).
 4. Find an available premium name and test its display.
